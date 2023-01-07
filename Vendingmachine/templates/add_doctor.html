@@ -1,0 +1,68 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+{% block title %} Doctor {% endblock %}
+<!--main content start here-->
+{% block content %}
+<div id="content" class="p-4 p-md-9 pt-5">
+  <fieldset>
+   <form action="" method="post" id="signupForm">
+      {% csrf_token %}
+        <h1>Add Doctor</h1>
+        
+            <label for="name">Doctor Name:</label>
+            <input type="text" id="doctor_name" name="doctor_name" required>
+
+            <label for="mail">Department:</label>
+        
+            <select name="dep_id" id="dep_id" data-style="btn-default"
+             class="selectpicker form-control"
+               required>
+              {% for res in data1 %}
+                   
+                    <option value="{{res.id}}">{{res.department_name}}</option>
+                    {% endfor %}
+                </select>
+        
+        <button type="submit">SAVE</button>
+  </form>
+</fieldset>
+</div>
+<div id="content" class="p-4 p-md-5 pt-5">
+  <fieldset>
+ 
+   
+        <h1>Doctor</h1>
+        
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Doctor</th>
+              <th scope="col">Department</th>
+             
+            </tr>
+          </thead>
+          <tbody>
+            {% for dat in data %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{ dat.doctor_name }}</td>
+              <td>{{ dat.department }}</td>
+             
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+           
+        
+       
+  
+</fieldset>
+</div>
+<script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+
+{% endblock content %}

@@ -1,0 +1,91 @@
+{% extends 'admin_base.html' %}
+{% load static %}
+{% block title %} Patient {% endblock %}
+<!--main content start here-->
+{% block content %}
+
+
+
+
+<div id="content" class="p-4 p-md-5 pt-5">
+   <form action="" method="post">
+      {% csrf_token %}
+        <h1>Add Patient</h1>
+        
+        <fieldset>
+            <label for="name">Patient Name:</label>
+            <input type="text" value="{{data.company_name}}" id="patient_name" name="patient_name" required>
+            
+           
+            <label for="mail">Department:</label>
+        
+            <select name="dep_id" id="dep_id" data-style="btn-default"
+             class="selectpicker form-control"
+               required>
+               <option selected>Nothing Selected</option>
+              {% for res in data1 %}
+                   
+                    <option value="{{res.id}}">{{res.department_name}}</option>
+                    {% endfor %}
+                </select>
+                <div id="pro_id">
+                 </div>
+            
+                
+               </fieldset>
+
+               
+             <br>
+             <br>
+             
+        <button type="submit">SAVE</button>
+  </form>
+</div>
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/css/bootstrap-select.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+<script type="text/javascript">
+  document.getElementById('dep_id').addEventListener('change', function() {
+    console.log('You selected: ', this.value);
+    var id=this.value;
+    
+    if (id != "Nothing Selected") {
+    var formoption = "";
+   
+    $.ajax({
+                  type: "POST",
+                  url: "{% url 'get_property'  %}",
+                  data: {
+                      id: id,
+                      csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                  },
+                  success: function (data) {
+                    console.log(data.all);
+                    var d = data.all
+                    
+                    for(key in d) {
+                        if(d.hasOwnProperty(key)) {
+                            var value = d[key];
+                            console.log(value);
+                            
+                            formoption += "<option value='"+value.id+"'selected >"+value.doctor_name+"</option>";
+                        }
+                      
+                      }
+                      console.log(formoption);
+                      $('#pro_id').append(formoption);
+                      
+                      document.getElementById("pro_id").innerHTML = "<label for='mail'>Property:</label>"+"<select name='doctor_id' id='doctor_id' data-style='btn-default' class='form-control' >" +
+                        formoption + "  </select>"
+                  }
+              });}else{
+            document.getElementById("pro_id").innerHTML="";
+        }
+  });
+    
+    </script>
+{% endblock content %}

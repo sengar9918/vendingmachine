@@ -1,0 +1,71 @@
+
+{% extends 'admin_base.html' %}
+{% load static %}
+{% block title %} Dashboard {% endblock %}
+<!--main content start here-->
+{% block content %}
+
+
+
+	        
+
+	      
+   
+
+        <!-- Page Content  -->
+      <div id="content" class="p-4 p-md-5 pt-5">
+		<h2><strong>Dashboard</strong></h2>
+		
+      <fieldset>
+     
+       
+            <h1>Patient Information</h1>
+            <h6><a href="/reset" class="btn btn-info" role="button">Reset All Token</a></h6>
+            
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Patient Name</th>
+                  <th scope="col">Token</th>
+                  <th scope="col">Doctor Name</th>
+                  <th scope="col">Department</th>
+                  <th scope="col">status</th>
+
+                  <!-- <th scope="col">Last</th> -->
+                 
+                </tr>
+              </thead>
+              <tbody>
+                {% for dat in data %}
+                <tr>
+                  <th scope="row">{{ forloop.counter }}</th>
+                  <td>{{ dat.patient_name }}</td>
+                  
+                  
+                  <td>{{ dat.token }}</td>
+                  <td>{{ dat.start_time }}</td>
+                  <td>{{ dat.end_time }}</td>
+                  {% if dat.status == 'Active'%}
+                  <td style = "color:red" >{{ dat.status }}</td>
+                  {% else %}
+                  <td style = "color:darkgreen" >{{ dat.status }}</td>
+                  {% endif %}
+
+                  <!-- <td>Otto</td> -->
+                 
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+    
+               
+            
+           
+      
+    </fieldset>
+    
+		</div>
+    
+    {% endblock content %}
+    
