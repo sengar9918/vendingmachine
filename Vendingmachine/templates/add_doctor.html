@@ -39,6 +39,7 @@
               <th scope="col">#</th>
               <th scope="col">Doctor</th>
               <th scope="col">Department</th>
+              <th scope="col">Reset</th>
              
             </tr>
           </thead>
@@ -48,6 +49,8 @@
               <th scope="row">{{ forloop.counter }}</th>
               <td>{{ dat.doctor_name }}</td>
               <td>{{ dat.department }}</td>
+              <td><a href="{% url 'reset' dat.id %}" class="btn btn-danger" role="button">Reset</a></td>
+
              
             </tr>
             {% endfor %}

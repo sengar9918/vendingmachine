@@ -30,7 +30,7 @@
                 </select>
                 <div id="pro_id">
                  </div>
-            
+                
                 
                </fieldset>
 
@@ -41,6 +41,9 @@
         <button type="submit">SAVE</button>
   </form>
 </div>
+<div id="content" class="p-4 p-md-5 pt-5"><div id="table_id">
+</div></div>
+
 
 
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
@@ -48,9 +51,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.7.5/js/bootstrap-select.min.js"></script>
+
+
 <script type="text/javascript">
   document.getElementById('dep_id').addEventListener('change', function() {
     console.log('You selected: ', this.value);
+    document.getElementById("table_id").innerHTML="";
     var id=this.value;
     
     if (id != "Nothing Selected") {
@@ -64,6 +70,7 @@
                       csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                   },
                   success: function (data) {
+                    
                     console.log(data.all);
                     var d = data.all
                     
@@ -72,15 +79,45 @@
                             var value = d[key];
                             console.log(value);
                             
-                            formoption += "<option value='"+value.id+"'selected >"+value.doctor_name+"</option>";
+                            formoption += "<option value='"+value.id+"' >"+value.doctor_name+"</option>";
                         }
                       
                       }
                       console.log(formoption);
                       $('#pro_id').append(formoption);
                       
-                      document.getElementById("pro_id").innerHTML = "<label for='mail'>Property:</label>"+"<select name='doctor_id' id='doctor_id' data-style='btn-default' class='form-control' >" +
+                      document.getElementById("pro_id").innerHTML = "<label for='mail'>Doctor:</label>"+"<select name='doctor_id' id='doctor_id' data-style='btn-default' class='form-control' > <option selected>Nothing selected</option>" +
                         formoption + "  </select>"
+
+                        document.getElementById('doctor_id').addEventListener('change', function() {
+                        console.log('You selected: ', this.value);
+                        doctor_id=this.value;
+                        document.getElementById("table_id").innerHTML="";
+                        $.ajax({
+                                      type: "POST",
+                                      url: "{% url 'get_token'  %}",
+                                      data: {
+                                          department_id: id,
+                                          doctor_id :doctor_id,
+
+
+                                          csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                                      },
+                                      success: function (data) {
+                                        console.log(data.all);
+                                        d=data.all;
+                                        if(d.hasOwnProperty(key)) {
+                            var value = d[key];
+                            document.getElementById("table_id").innerHTML = " <table class='table table-condensed' > <thead><tr> <th>  Token under consultation </th><th>Next token</th> <th>Approximate wating</th> </tr></thead> <tbody><tr><td>"+ value.current_token+"</td> <td>"+ value.next_token+"</td>  <td>"+ value.approximate_waiting+"</td></tr>   </tbody>  </table>"
+                            
+                        }
+                                        
+
+                                      }})
+
+
+                        
+                      });
                   }
               });}else{
             document.getElementById("pro_id").innerHTML="";
@@ -88,4 +125,6 @@
   });
     
     </script>
+
+
 {% endblock content %}

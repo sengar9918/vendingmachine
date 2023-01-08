@@ -1,0 +1,6 @@
+Assignment: Today’s challenge is to create a software like a ticket\token vending machine in a hospital.
+What’s a vending machine?
+      It is a machine you can find at the entrance of banks and stores. The machine asks for the type of operation or procedure you need to perform and assign a token number according to the department.
+        Our challenge is to create ticket vending for an OP department in a hospital where there are doctors available in departments General Medicine(G), ENT(E), Orthopedics(O), Pediatrics(P) and Cardiac Science(C).
+        The program will ask for the department and list the doctors. On the selection of doctor, it will show the next token number, current token under consultation and approximate waiting time (avg.10 minutes for consultation).
+        The patient can confirm or go back to select another doctor. On confirmation, a token will be generated with abbreviated department, doctor name and token number . For example, if patient selects Dr. Jane Doe in General Medicine Department token will be G-JD-1. The process continues for the next patient using the vending machine. The program should have an option for the doctors to call the next patient and also to reset token everyday.

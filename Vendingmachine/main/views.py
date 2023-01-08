@@ -50,6 +50,7 @@ def manage_doctor(request):
     doctor_det=Doctors_details.objects.all()
     for i in doctor_det:
         var={}
+        var['id']=i.id
         var['doctor_name']=i.doctor_name
         dep=i.department
         name=Department.objects.get(id=dep)
@@ -79,12 +80,15 @@ def manage_patient(request):
             d=Patient_details.objects.values_list('start_time','end_time' )
             data12=Patient_details.objects.filter(token__icontains=doc.dep_doc_id,start_time__lte=start,end_time__gte=start)
             if data12:
-            
                 tok=[i.token.split('-')[-1]  for i in data12]
                 num=int(max(tok))+1
+                token123=doc.dep_doc_id+"-"+str(max(tok))
+                end_t=Patient_details.objects.get(token=token123)
+                
+                new_start=end_t.end_time
+                new_end = end_t.end_time + timedelta(minutes=10)
                 token1=doc.dep_doc_id+"-"+str(num)
-               
-                Patient_details.objects.create(doctor_id=doctor_id,department_id=dep_id,patient_name=patient_name,token=token1,start_time=start,end_time=end)
+                Patient_details.objects.create(doctor_id=doctor_id,department_id=dep_id,patient_name=patient_name,token=token1,start_time=new_start,end_time=new_end)
                 return redirect('home')
             else:
                 Patient_details.objects.create(doctor_id=doctor_id,department_id=dep_id,patient_name=patient_name,token=token,start_time=start,end_time=end)     
@@ -102,20 +106,56 @@ def get_property(request):
         r=[]       
         id=request.POST['id']
         data=Doctors_details.objects.filter(department=id)
+        # if len(data) == 1:
         for l in data:
             val={}
             val['id']=l.id
             val['doctor_name']=l.doctor_name
             
             r.append(val)
-        
+    
 
-        return JsonResponse({'all':r })
+    return JsonResponse({'all':r })
 
 # for reset 
-def reset(request):
-    today = datetime.today()
+def reset(request,id):
+   
+    Patient_details.objects.filter(docter_id=id).delete()
+    return redirect('manage_doctor')
+def reset_1(request):
+   
     Patient_details.objects.all().delete()
     return redirect('home')
     
 
+def get_token(request):
+    if request.method=="POST":
+        r=[]       
+        start=datetime.now(timezone.utc)
+        doctor_id=request.POST['doctor_id']
+        department_id=request.POST['department_id'] 
+        data=Patient_details.objects.filter(doctor_id=doctor_id,department_id=department_id,start_time__lte=start,end_time__gte=start).values()
+        if len(data) > 0 :
+            new=[i['token'] for i in data]
+            
+            val={}
+            val['current_token']=new[-1]
+            tok=val['current_token'].split('-')
+            new_token=tok[0]+"-"+tok[1]+"-"+str(int(tok[2])+1) 
+            val['next_token']=new_token
+            val['approximate_waiting']="10 minutes"
+            
+            r.append(val)
+            
+        else:
+            val={}
+            doc= Doctors_details.objects.get(id=doctor_id,department=department_id)
+            token=doc.dep_doc_id+"-"+str(1)
+            val['current_token']="" 
+            new_token=token
+            val['next_token']=new_token
+            val['approximate_waiting']=""
+            
+            r.append(val)
+            
+        return JsonResponse({'all':r })

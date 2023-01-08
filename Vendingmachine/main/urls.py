@@ -18,9 +18,11 @@ from django.urls import path,include
 from . import views
 
 urlpatterns = [
-     path('reset', views.reset, name='reset'),
+     path('reset_1', views.reset_1, name='reset_1'),
+
+     path('reset/<id>', views.reset, name='reset'),
      path('', views.home, name='home'),
-     
+     path('get_token/',views.get_token, name="get_token"),
      path('get_property/',views.get_property, name="get_property"),
      path('manage_patient', views.manage_patient, name='manage_patient'),
      path('manage_doctor', views.manage_doctor, name='manage_doctor'),
